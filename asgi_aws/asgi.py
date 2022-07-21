@@ -56,5 +56,5 @@ class Asgi:
             return entrypoint
 
         else:
-            service = ", ".join(map(lambda x: x.value, Service))
-            raise ValueError(f"Unknown service: {service}")
+            service = ", ".join(map(lambda x: x.value, Service))  # pragma: nocover
+            raise ValueError(f"Unknown service: {service}")  # pragma: nocover
