@@ -1,4 +1,4 @@
-name: Tests
+name: Lint and Format
 
 on:
   push:
@@ -8,11 +8,11 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10.0"]
+        python-version: ["3.10.0"]
       fail-fast: false
 
     steps:
@@ -32,9 +32,7 @@ jobs:
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: flit install --symlink
-      - name: Test
-        run: bash scripts/test.sh
-      - name: Upload coverage
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        uses: codecov/codecov-action@v3
+      - name: Lint
+        run: pre-commit run --all-files --verbose --show-diff-on-failure
+      - name: check Static Analysis
+        run: make static
