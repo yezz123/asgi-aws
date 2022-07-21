@@ -6,4 +6,4 @@ set -x
 echo "ENV=${ENV}"
 
 export PYTHONPATH=.
-pytest --cov=authx_core --cov=tests
+pytest --cov=asgi_aws --cov=tests
