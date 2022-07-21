@@ -14,24 +14,24 @@ class ASGICycle(Protocol):
     """ASGI Cycle, which is a callable that accepts a send, a receive and a run function."""
 
     def __init__(self, request: Request) -> None:
-        ...
+        ...  # pragma: nocover
 
     def __call__(self, app: ASGIApp) -> None:
-        ...
+        ...  # pragma: nocover
 
     async def run(self, app: ASGIApp) -> None:
-        ...
+        ...  # pragma: nocover
 
     async def receive(self) -> Message:
-        ...
+        ...  # pragma: nocover
 
     async def send(self, message: Message) -> None:
-        ...
+        ...  # pragma: nocover
 
     @property
     def scope(self) -> Scope:
-        ...
+        ...  # pragma: nocover
 
     @property
     def response(self) -> Response:
-        ...
+        ...  # pragma: nocover
