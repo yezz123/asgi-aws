@@ -4,7 +4,7 @@ all_src = $(src) $(tests_src)
 
 
 mypy_base = mypy --show-error-codes
-mypy = $(mypy_base) $(all_src)
+mypy = $(mypy_base) $(src)
 
 help:
 	@echo "Targets:"
