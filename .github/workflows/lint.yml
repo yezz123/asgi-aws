@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10.0"]
+        python-version: ["3.10"]
       fail-fast: false
 
     steps:
@@ -28,10 +28,10 @@ jobs:
           key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test
       - name: Install Flit
         if: steps.cache.outputs.cache-hit != 'true'
-        run: pip install flit
+        run: pip install hatch
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: flit install --symlink
+        run: pip install -e ."[lint]"
       - name: Lint
         run: pre-commit run --all-files --verbose --show-diff-on-failure
       - name: check Static Analysis
