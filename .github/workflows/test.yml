@@ -26,12 +26,12 @@ jobs:
         with:
           path: ${{ env.pythonLocation }}
           key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test
-      - name: Install Flit
+      - name: Install hatchling
         if: steps.cache.outputs.cache-hit != 'true'
-        run: pip install flit
+        run: pip install hatch
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: flit install --symlink
+        run: pip install -e ."[test]"
       - name: Test
         run: bash scripts/test.sh
       - name: Upload coverage
