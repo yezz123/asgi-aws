@@ -1,13 +1,17 @@
 [build-system]
-requires = ["flit"]
-build-backend = "flit.buildapi"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.flit.metadata]
-module = "asgi_aws"
-dist-name = "asgi_aws"
-author = "Yasser Tahiri"
-author-email = "hello@yezz.me"
-home-page = "https://github.com/yezz123/asgi-aws"
+[project]
+name = "asgi_aws"
+description = "Build API with ASGI in AWS Lambda with API Gateway HTTP API or REST API, or with Function URL ✨"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+authors = [
+    { name = "Yasser Tahiri", email = "hello@yezz.me" },
+]
+
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -17,20 +21,26 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Internet :: WWW/HTTP :: Session",
     "Typing :: Typed",
 ]
-description-file = "README.md"
-requires-python = ">=3.8"
-requires = [
-    "typing-extensions >=3.7.4, <4.0.0"
+
+dependencies = [
+    "typing-extensions >=3.7.4,<4.5.0",
 ]
 
-[tool.flit.metadata.requires-extra]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/yezz123/asgi-aws"
+Funding = 'https://github.com/sponsors/yezz123'
+
+[project.optional-dependencies]
 lint = [
-    "pre-commit==2.19.0",
-    "mypy==0.931",
+    "pre-commit==2.20.0",
+    "mypy==0.991",
 ]
 test = [
     "pytest==7.1.2",
@@ -41,3 +51,7 @@ test = [
     "pydantic==1.9.1",
     "python-multipart"
 ]
+
+
+[tool.hatch.version]
+path = "asgi_aws/__init__.py"
