@@ -8,3 +8,5 @@ updates:
       interval: monthly
     reviewers:
     - yezz123
+    commit-message:
+      prefix: ⬆
