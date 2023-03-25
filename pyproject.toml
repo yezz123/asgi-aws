@@ -86,7 +86,6 @@ ignore = [
 known-third-party = ["pydantic", "typing_extensions"]
 
 [tool.mypy]
-plugins = "pydantic.mypy"
 follow_imports = "silent"
 strict_optional = true
 warn_redundant_casts = true
