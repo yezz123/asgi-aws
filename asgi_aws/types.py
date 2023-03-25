@@ -1,6 +1,13 @@
+from typing import Any, Awaitable, Callable, MutableMapping
+
 from typing_extensions import Protocol
 
-from asgi_aws.type import Message, Receive, Request, Response, Scope, Send
+Message = MutableMapping[str, Any]
+Scope = MutableMapping[str, Any]
+Receive = Callable[[], Awaitable[Message]]
+Send = Callable[[Message], Awaitable[None]]
+Request = Any
+Response = Any
 
 
 class ASGIApp(Protocol):

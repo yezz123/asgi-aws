@@ -2,24 +2,22 @@ from base64 import b64decode, b64encode
 from typing import Any, Dict, Iterator
 from urllib.parse import urlencode
 
-from asgi_aws.services.http import Http
-from asgi_aws.type import Message, Scope
+from asgi_aws.services.http import HttpCycleBase
+from asgi_aws.types import Message, Scope
 
 Request = Dict[str, Dict[str, Any]]
 
 Response = Dict[str, Any]
 
 
-class AWS(Http[Request, Response]):
-    """
-    AWS Lambda HTTP API or REST API, or with Function URL ✨
-    """
+class AWS(HttpCycleBase[Request, Response]):
+    """AWS Lambda with API Gateway HTTP API or REST API, or with Function URL ✨"""
 
     @property
     def scope(self) -> Scope:
         event = self.request["event"]
 
-        def generate_query() -> Iterator[str]:
+        def gene_query_string() -> Iterator[str]:
             if "multiValueQueryStringParameters" in event:
                 params = event["multiValueQueryStringParameters"] or {}
                 for key, values in params.items():
@@ -32,7 +30,7 @@ class AWS(Http[Request, Response]):
                         yield urlencode({key: vale})
             return
 
-        query_string = "&".join(generate_query()).encode()
+        query_string = "&".join(gene_query_string()).encode()
 
         if "httpMethod" in event:
             method = event["httpMethod"]
@@ -57,7 +55,7 @@ class AWS(Http[Request, Response]):
 
         if "cookies" in event:
             cookies = ";".join(event["cookies"])
-            headers = headers + ((b"cookie", cookies.encode("latin-1")))  # type: ignore
+            headers = headers + ((b"cookie", cookies.encode("latin-1")),)
 
         return {
             "type": "http",
@@ -70,12 +68,12 @@ class AWS(Http[Request, Response]):
             "headers": headers,
             "server": None,
             "client": None,
+            "state": self.state,
         }
 
     async def receive(self) -> Message:
         event = self.request["event"]
         body = event.get("body", "")
-
         if body is None:
             body = b""
         elif event.get("isBase64Encoded", False):

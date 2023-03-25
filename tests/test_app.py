@@ -5,18 +5,18 @@ import pytest
 
 @pytest.fixture()
 def app():
-    from asgi_aws import Asgi, AsgiService
+    from asgi_aws import Asgi
     from tests.template.app import app
 
-    return Asgi.entry_point(app, AsgiService.aws_lambda)
+    return Asgi.entry_point(app)
 
 
 @pytest.fixture()
 def failed_app():
-    from asgi_aws import Asgi, AsgiService
+    from asgi_aws import Asgi
     from tests.template.app import failed_app
 
-    return Asgi.entry_point(failed_app, AsgiService.aws_lambda)
+    return Asgi.entry_point(failed_app)
 
 
 def test_simple(app):
