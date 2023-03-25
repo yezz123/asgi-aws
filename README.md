@@ -1,14 +1,24 @@
 # asgi-aws
 
-[![Tests](https://github.com/yezz123/asgi-aws/actions/workflows/test.yml/badge.svg)](https://github.com/yezz123/asgi-aws/actions/workflows/test.yml)
-[![Lint and Format](https://github.com/yezz123/asgi-aws/actions/workflows/lint.yml/badge.svg)](https://github.com/yezz123/asgi-aws/actions/workflows/lint.yml)
-[![codecov](https://codecov.io/gh/yezz123/asgi-aws/branch/main/graph/badge.svg?token=MTG51U77R2)](https://codecov.io/gh/yezz123/asgi-aws)
-[![Language](https://img.shields.io/badge/Language-Python-green?style)](https://github.com/yezz123)
-[![Star Badge](https://img.shields.io/static/v1?label=%F0%9F%8C%9F&message=If%20Useful&style=style=flatcolor=BC4E99)](https://github.com/yezz123/asgi-aws)
-[![Pypi](https://img.shields.io/pypi/pyversions/asgi_aws.svg?color=%2334D058)](https://pypi.org/project/asgi_aws)
+<p align="center">
+<a href="https://github.com/yezz123/asgi-aws/actions/workflows/test.yml" target="_blank">
+    <img src="https://github.com/yezz123/asgi-aws/actions/workflows/test.yml/badge.svg" alt="Test">
+</a>
+<a href="https://github.com/yezz123/asgi-aws/actions/workflows/lint.yml">
+    <img src="https://github.com/yezz123/asgi-aws/actions/workflows/lint.yml/badge.svg"/>
+</a>
+<a href="https://codecov.io/gh/yezz123/asgi-aws">
+    <img src="https://codecov.io/gh/yezz123/asgi-aws/branch/main/graph/badge.svg?token=MTG51U77R2"/>
+</a>
+<a href="https://github.com/yezz123/asgi-aws/actions/workflows/lint.yml">
+    <img src="https://github.com/yezz123/asgi-aws/actions/workflows/lint.yml/badge.svg"/>
+</a>
+<a href="https://pypi.org/project/asgi_aws">
+    <img src="https://img.shields.io/pypi/pyversions/asgi_aws.svg?color=%2334D058"/>
+</a>
+</p>
 
-Build API with ASGI in AWS Lambda with API Gateway HTTP API or REST API, or with
-Function URL ✨
+Build API with ASGI in AWS Lambda with API Gateway HTTP API or REST API, or with Function URL ✨
 
 ## Installation
 
@@ -21,7 +31,7 @@ pip install asgi_aws
 - Create a file `main.py` with:
 
 ```python
-from asgi_aws import Asgi, AsgiService
+from asgi_aws import Asgi
 from typing import Optional
 from fastapi import FastAPI
 
@@ -35,12 +45,12 @@ def read_root():
 def read_item(item_id: int, q: Optional[str] = None):
     return {"item_id": item_id, "q": q}
 
-entry_point = Asgi.entry_point(app, AsgiService.aws)
+entry_point = Asgi.entry_point(app)
 ```
 
 ## Deploy it
 
-- Let's create for exampple a yaml file with the following content:
+- Let's create for example a yaml file with the following content:
 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
@@ -50,16 +60,13 @@ Resources:
   ExFunctionUrlAPI:
     Type: AWS::Serverless::Function
     Properties:
-      Runtime: python3.9
+      Runtime: python3.10
       CodeUri: src/
       Handler: main.entry_point
       MemorySize: 256
       Timeout: 30
       FunctionUrlConfig:
         AuthType: NONE
-      Environment:
-        Variables:
-          AsgiService: AWS Lambda
 ```
 
 - Now, we can deploy the function with the following command:
@@ -90,11 +97,8 @@ source venv/bin/activate
 And then install the development dependencies:
 
 ```bash
-# Install Flit
-pip install flit
-
 # Install dependencies
-flit install --symlink
+pip install -e .[test,lint]
 ```
 
 ### Run tests 🌝
@@ -102,7 +106,7 @@ flit install --symlink
 You can run all the tests with:
 
 ```bash
-make test
+bash scripts/test.sh
 ```
 
 ### Format the code 🍂
@@ -110,7 +114,13 @@ make test
 Execute the following command to apply `pre-commit` formatting:
 
 ```bash
-make lint
+bash scripts/format.sh
+```
+
+Execute the following command to apply `mypy` type checking:
+
+```bash
+bash scripts/lint.sh
 ```
 
 ## License
