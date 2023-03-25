@@ -1,5 +1,7 @@
 # asgi-aws
 
+![logo](https://raw.githubusercontent.com/yezz123/asgi-aws/main/.github/logo.png)
+
 <p align="center">
 <a href="https://github.com/yezz123/asgi-aws/actions/workflows/test.yml" target="_blank">
     <img src="https://github.com/yezz123/asgi-aws/actions/workflows/test.yml/badge.svg" alt="Test">
