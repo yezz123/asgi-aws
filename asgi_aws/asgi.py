@@ -1,15 +1,10 @@
 import asyncio
-from enum import Enum
 from typing import Any, Callable, Type, Union
 
 from asgi_aws.app import ASGIApp, ASGICycle
+from asgi_aws.ext import find_service
+from asgi_aws.services import Service
 from asgi_aws.services.aws import AWS
-
-
-class Service(str, Enum):
-    """ASGI Service Type"""
-
-    aws = "AWS Lambda"
 
 
 class Asgi:
@@ -28,7 +23,7 @@ class Asgi:
         - `body`: The body of the response, e.g. `{"foo": "bar"}`
     """
 
-    def __init__(self, app: ASGIApp, http_cycle: Type[ASGICycle]):
+    def __init__(self, app: ASGIApp, http_cycle: Type[ASGICycle]) -> None:
         self.app = app
         self._http_cycle = http_cycle
         loop = asyncio.new_event_loop()
@@ -41,14 +36,15 @@ class Asgi:
 
     @classmethod
     def entry_point(
-        cls, app: ASGIApp, service: Union[str, Service]
+        cls, app: ASGIApp, service: Union[str, Service, None] = None
     ) -> Callable[..., Any]:
         """
         :param app: The ASGI Application
         :param service: The service type, which is either a string or an enum of type `Service`
         :return: The entry point for the ASGI server
         """
-        if service == Service.aws:
+        if service is None:
+            service = find_service()
 
             def entrypoint(event: Any, context: Any) -> Any:
                 return cls(app, AWS)(request={"event": event, "context": context})
@@ -56,5 +52,5 @@ class Asgi:
             return entrypoint
 
         else:
-            service = ", ".join(map(lambda x: x.value, Service))  # pragma: nocover
+            service = ", ".join(x.value for x in Service)  # pragma: nocover
             raise ValueError(f"Unknown service: {service}")  # pragma: nocover

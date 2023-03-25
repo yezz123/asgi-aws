@@ -61,7 +61,7 @@ class AWS(Http[Request, Response]):
 
         return {
             "type": "http",
-            "asgi": {"version": "3.0"},
+            "asgi": {"version": "3.0", "spec_version": "2.2"},
             "http_version": "1.1",
             "method": method,
             "scheme": "http",
@@ -76,7 +76,9 @@ class AWS(Http[Request, Response]):
         event = self.request["event"]
         body = event.get("body", "")
 
-        if event.get("isBase64Encoded", False):
+        if body is None:
+            body = b""
+        elif event.get("isBase64Encoded", False):
             body = b64decode(body)
         else:
             body = body.encode()

@@ -1,6 +1,16 @@
+import contextlib
 from typing import Optional
 
-from fastapi import Cookie, FastAPI, File, Form, Header, HTTPException, UploadFile
+from fastapi import (
+    Cookie,
+    FastAPI,
+    File,
+    Form,
+    Header,
+    HTTPException,
+    Request,
+    UploadFile,
+)
 from fastapi.responses import PlainTextResponse, Response
 from pydantic import BaseModel
 
@@ -9,7 +19,12 @@ class Item(BaseModel):
     name: str
 
 
-app = FastAPI()
+@contextlib.asynccontextmanager
+async def lifespan(app):
+    yield {"message": "hello"}
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")
@@ -90,3 +105,16 @@ async def file_and_form(
         "fileb_content_type": fileb.content_type,
         "filename": fileb.filename,
     }
+
+
+@app.get("/lifespan")
+async def lifespan_(request: Request):
+    return {"message": request.state.message}
+
+
+@contextlib.asynccontextmanager
+async def fail_lifespan(app):
+    raise Exception("Expected failed")
+
+
+failed_app = FastAPI(lifespan=fail_lifespan)
