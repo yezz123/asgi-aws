@@ -28,10 +28,10 @@ class Lifespan:
             self.startup_event.set()
         elif message["type"] == "lifespan.shutdown.complete":
             pass
-        elif message["type"] == "lifespan.startup.failed":
-            self.shutdown_event.set()
-            self.should_exit = True
-        elif message["type"] == "lifespan.shutdown.failed":
+        elif message["type"] in [
+            "lifespan.startup.failed",
+            "lifespan.shutdown.failed",
+        ]:
             self.shutdown_event.set()
             self.should_exit = True
         return None
@@ -70,8 +70,7 @@ class HttpCycleBase(Generic[Req, Res]):
         loop.run_until_complete(main_task)
         loop.run_until_complete(lifespan_task)
         if self.lifespan.should_exit:
-            err = lifespan_task.exception()
-            if err:
+            if err := lifespan_task.exception():
                 raise err
 
     @property
